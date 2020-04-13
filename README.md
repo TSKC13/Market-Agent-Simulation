@@ -27,6 +27,8 @@ The limit order book not only contains all orders remaining on the book, but als
 
 (2) Order Manager: (Author: SHEN, Kanchao)
 
+This is an order management system, used to process the orders of various agents and match them, and maintain market data .
+
 ### 2. Zero Intelligence Agent
 (Author: MO, Zi and ZHOU, Zhen)
 
