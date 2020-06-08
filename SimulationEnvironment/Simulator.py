@@ -13,7 +13,7 @@ sys.path.append(os.path.pardir)
 
 from OMS.OMS import OrderManagementSystem
 from ZIAgent.ZIAgent import ZIAgent
-from Strategies1 import *
+from Strategies import *
 
 class State:
     
