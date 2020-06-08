@@ -37,11 +37,17 @@ class myStrategy_demo1(Algo):
         self.para1 = para1
         self.para2 = para2
         self.done  = False
-
+        self.is_limit = False
+        
     def reset(self):
         
         self.__init__base()
         self.__init__(self.para1, self.para2)
+
+    def lead_limit_order(self, this_order_volume, state):
+        self.is_limit = True
+        strategy_order = [ORDER_ID, "limit", DIRECTION, this_order_volume, state.ask_book[1][0]]
+        return strategy_order
 
     def action(self, state):
         ## for demenstration purpose
@@ -58,8 +64,22 @@ class myStrategy_demo1(Algo):
                 this_order_volume = rem_qty
 
             if this_order_volume > 0:
-                strategy_order = [ORDER_ID, "market", DIRECTION, this_order_volume, 0]
+                # print(state.current_time, this_order_volume)
+                # print(this_order_volume)
+                if state.ask != 4560987 and state.ask_book[0][1] <= 1000 and state.strategy_record.active_order == [] and not self.is_limit :
+                    strategy_order = self.lead_limit_order(this_order_volume, state)
+                else:
+                    if state.strategy_record.active_order != {}:
+                        # print(state.strategy_record.active_order)
+                        for price in state.strategy_record.active_order.keys():
+                            print(state.strategy_record.active_order[price])
+                            strategy_order = [ORDER_ID, "cancel", state.strategy_record.active_order[price][0], state.strategy_record.active_order[0][2], state.strategy_record.filled_order[0][1]]
+                    else:
+                        self.is_limit = False
+                        strategy_order = [ORDER_ID, "market", DIRECTION, this_order_volume, 0]
+                # print(state.strategy_record.position)
             else:
+                # self.done = True
                 strategy_order = []
         else:
             strategy_order = []
