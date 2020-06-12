@@ -13,7 +13,7 @@ sys.path.append(os.path.pardir)
 
 from OMS.OMS import OrderManagementSystem
 from ZIAgent.ZIAgent import ZIAgent
-from Strategies import *
+from Strategies1 import *
 
 class State:
     
@@ -105,8 +105,9 @@ class Simulator:
     
     def step(self, action):
         
-        if action: # action is not empty list
-            self.OMSTest.receive(action)
+        for act in action:  # multiple actions
+            if act:  # this action is not empty list
+                self.OMSTest.receive(act)
         
         self.state.lastTime = self.state.current_time
         self.ZIAgent.Execute(self.OMSTest)              # execute ZIAgent generator
@@ -131,12 +132,12 @@ class Simulator:
         self.time_horizon             = self.TimeHorizon
 
     def slippage(self):
-
+        
         strat_revenue = 0
-        ref_revenue = 0
+        ref_revenue   = 0
         for filled_order in self.OMSTest.strategy_record.filled_order:
-            strat_revenue += filled_order[1] * filled_order[2]  # 1:price, 2: qty
-            ref_revenue += self.ref_price * filled_order[2]
+            strat_revenue += filled_order[1]*filled_order[2]  #1:price, 2: qty
+            ref_revenue += self.ref_price*filled_order[2]
         shortfall = ref_revenue - strat_revenue if DIRECTION == 'sell' else strat_revenue - ref_revenue
         return shortfall, ref_revenue, strat_revenue
 
@@ -188,7 +189,6 @@ if __name__ == '__main__':
     result['strat_revenue'] = strat_revenue
     print(result['shortfall'].mean() ,  0.0001*result['shortfall'].var())
     print(result)
-    print(result['shortfall'].mean() +  0.0001*result['shortfall'].var())
-    result.to_csv("strategy.csv")
+    print(result['shortfall'].mean() -  0.0001*result['shortfall'].var())
 
 
