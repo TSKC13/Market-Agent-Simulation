@@ -105,8 +105,9 @@ class Simulator:
     
     def step(self, action):
         
-        if action: # action is not empty list
-            self.OMSTest.receive(action)
+        for act in action:  # multiple actions
+            if act:  # this action is not empty list
+                self.OMSTest.receive(act)
         
         self.state.lastTime = self.state.current_time
         self.ZIAgent.Execute(self.OMSTest)              # execute ZIAgent generator
@@ -137,7 +138,8 @@ class Simulator:
         for filled_order in self.OMSTest.strategy_record.filled_order:
             strat_revenue += filled_order[1]*filled_order[2]  #1:price, 2: qty
             ref_revenue += self.ref_price*filled_order[2]
-        return strat_revenue - ref_revenue, ref_revenue, strat_revenue
+        shortfall = ref_revenue - strat_revenue if DIRECTION == 'sell' else strat_revenue - ref_revenue
+        return shortfall, ref_revenue, strat_revenue
 
 
 
