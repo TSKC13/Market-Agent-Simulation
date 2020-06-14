@@ -13,7 +13,7 @@ sys.path.append(os.path.pardir)
 
 from OMS.OMS import OrderManagementSystem
 from ZIAgent.ZIAgent import ZIAgent
-from Strategies1 import *
+from Strategies import *
 
 class State:
     
@@ -144,51 +144,51 @@ class Simulator:
 
 
 if __name__ == '__main__':
-    
-    ## which strategy to use
-    strat = "strategy"
-    ## init simulator
-    env  = Simulator(strat_name=strat, trans_record=True)
-    
-    if strat == "strategy":
-        algo = myStrategy_demo1(para1 = 0.5,  # for demenstration purpose
-                                para2 = 0.1)  # for demenstration purpose
-    
-    # episodes      = 10_000
-    episodes      = 10000
-    shortfall     = episodes * [0.0]
-    ref_revenue   = episodes * [0.0]
-    strat_revenue = episodes * [0.0]
-    
-    # time for running program
-    RunningStartTime = time.perf_counter()
-    for episode in range(episodes):        
-        print(episode)
-        # reset state and algos
-        state = env.reset(strat_name=strat, trans_record=True)
-        algo.reset()
-        done = False
-    
-        while (state.current_time < state.time_horizon) and not done:
-            # run the algorithm for one episode
-            algo_action, done = algo.action(state)                
-            
-            # state, reward, done, info = env.step(action)
-            state = env.step(algo_action)
-        
-        # env.ZIAgent.ZIAgentPirceOrderPlot()
-        # env.ZIAgent.PirceTimePlot()
-        
-        shortfall[episode], ref_revenue[episode], strat_revenue[episode] = env.slippage()
-    
-    RunningTime = round(time.perf_counter()-RunningStartTime,3)
-    print(f"the running cost: {RunningTime} seconds")
-    result = pd.DataFrame()
-    result['shortfall'] = shortfall
-    result['ref_revenue'] = ref_revenue
-    result['strat_revenue'] = strat_revenue
-    print(result['shortfall'].mean() ,  0.0001*result['shortfall'].var())
-    print(result)
-    print(result['shortfall'].mean() -  0.0001*result['shortfall'].var())
+    for vol in range(4, 51):
+        ## which strategy to use
+        strat = "strategy"
+        ## init simulator
+        env  = Simulator(strat_name=strat, trans_record=True)
 
+        if strat == "strategy":
+            algo = myStrategy_demo1(para1 = vol*10,  # for demenstration purpose
+                                    para2 = 0.1)  # for demenstration purpose
+
+        # episodes      = 10_000
+        episodes      = 1000
+        shortfall     = episodes * [0.0]
+        ref_revenue   = episodes * [0.0]
+        strat_revenue = episodes * [0.0]
+
+        # time for running program
+        RunningStartTime = time.perf_counter()
+        for episode in range(episodes):
+            print(episode)
+            # reset state and algos
+            state = env.reset(strat_name=strat, trans_record=True)
+            algo.reset()
+            done = False
+
+            while (state.current_time < state.time_horizon) and not done:
+                # run the algorithm for one episode
+                algo_action, done = algo.action(state)
+
+                # state, reward, done, info = env.step(action)
+                state = env.step(algo_action)
+
+            # env.ZIAgent.ZIAgentPirceOrderPlot()
+            # env.ZIAgent.PirceTimePlot()
+
+            shortfall[episode], ref_revenue[episode], strat_revenue[episode] = env.slippage()
+
+        RunningTime = round(time.perf_counter()-RunningStartTime,3)
+        print(f"the running cost: {RunningTime} seconds")
+        result = pd.DataFrame()
+        result['shortfall'] = shortfall
+        result['ref_revenue'] = ref_revenue
+        result['strat_revenue'] = strat_revenue
+        print(result['shortfall'].mean() ,  0.0001*result['shortfall'].var())
+        print(result)
+        print(result['shortfall'].mean() +  0.0001*result['shortfall'].var())
+        result.to_csv("strategy_%d.csv"%vol)
 

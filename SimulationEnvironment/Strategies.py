@@ -45,7 +45,7 @@ class myStrategy_demo1(Algo):
 
     def action(self, state):
         ## for demenstration purpose
-        vol_per_order = 500
+        vol_per_order = self.para1
         if not self.done:
             time_prop = (0.01 * state.time_horizon + state.current_time) / state.time_horizon
             rem_qty = TOTAL_SIZE + state.strategy_record.position

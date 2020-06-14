@@ -64,8 +64,6 @@ class myStrategy_demo1(Algo):
                 this_order_volume = rem_qty
 
             if this_order_volume > 0:
-                # print(state.current_time, this_order_volume)
-                # print(this_order_volume)
                 if state.ask != 4560987 and state.ask_book[0][1] <= 1000 and state.strategy_record.active_order == [] and not self.is_limit :
                     strategy_order = self.lead_limit_order(this_order_volume, state)
                 else:
@@ -79,12 +77,11 @@ class myStrategy_demo1(Algo):
                         strategy_order = [ORDER_ID, "market", DIRECTION, this_order_volume, 0]
                 # print(state.strategy_record.position)
             else:
-                # self.done = True
                 strategy_order = []
         else:
             strategy_order = []
         
-        return strategy_order, self.done
+        return [strategy_order], self.done
 
                         
                         
