@@ -84,7 +84,7 @@ if __name__ == "__main__":
                         # OMSTest.receive(["strategy", "market", dir, this_order_volume, 0])
                         buy_list_price += OMSTest.execPrice
                         buy_list_volume += OMSTest.execQty
-                        # print(ZIAgentTest.CurrentTime)
+                        print(ZIAgentTest.CurrentTime)
                         # print(min(int((target_vol-total_buy_vol)/(TimeHorizon-ZIAgentTest.CurrentTime)/10)+1,target_vol-total_buy_vol))
 
                     # ZIAgentTest.ZIAgentConsolePrint(OMSTest) # print order and book results into the console
