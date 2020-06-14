@@ -64,7 +64,6 @@ class myStrategy_demo1(Algo):
         if state.current_time > (self.next+0.5)/self.n*99 and self.next < self.n:
             this_volume = max(int(state.strategy_record.position+TOTAL_SIZE-self.X_i[self.next]),0)
             strategy_order = [ORDER_ID, "market", DIRECTION, this_volume, 0]
-            # print(self.X_i[self.next],  this_volume)
             self.next += 1
         remain = TOTAL_SIZE + state.strategy_record.position
         if state.current_time > 99.5 and remain != 0:

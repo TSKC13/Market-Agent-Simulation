@@ -55,7 +55,6 @@ class myStrategy_demo1(Algo):
         if not self.done:
             time_prop = (0.01 * state.time_horizon + state.current_time) / state.time_horizon
             rem_qty = TOTAL_SIZE + state.strategy_record.position
-            # print(rem_qty)
             if rem_qty > vol_per_order:
                 this_order_volume = min(
                     vol_per_order * int((TOTAL_SIZE * time_prop + state.strategy_record.position) / vol_per_order),
@@ -68,14 +67,11 @@ class myStrategy_demo1(Algo):
                     strategy_order = self.lead_limit_order(this_order_volume, state)
                 else:
                     if state.strategy_record.active_order != {}:
-                        # print(state.strategy_record.active_order)
                         for price in state.strategy_record.active_order.keys():
-                            print(state.strategy_record.active_order[price])
                             strategy_order = [ORDER_ID, "cancel", state.strategy_record.active_order[price][0], state.strategy_record.active_order[0][2], state.strategy_record.filled_order[0][1]]
                     else:
                         self.is_limit = False
                         strategy_order = [ORDER_ID, "market", DIRECTION, this_order_volume, 0]
-                # print(state.strategy_record.position)
             else:
                 strategy_order = []
         else:
